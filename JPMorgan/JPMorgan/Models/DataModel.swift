@@ -15,4 +15,5 @@ struct DataModel:Hashable {
     }
     
     var planetName   : String
+    var rotation_period: String
 }

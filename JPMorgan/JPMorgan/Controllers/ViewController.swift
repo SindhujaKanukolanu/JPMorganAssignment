@@ -41,13 +41,14 @@ class ViewController: UIViewController,UITableViewDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         setupBindings()
-        if !AFNetworkReachabilityManager.shared().isReachable {
-            getOfflineArray()
+        if !AFNetworkReachabilityManager.shared().isReachable && viewModel.planetsArray.count > 0 {
+            DispatchQueue.main.async {
+                self.getOfflineArray()
+            }
         }
     }
     
     private func setupBindings() {
-        if AFNetworkReachabilityManager.shared().isReachable {
             cardsPublisher = viewModel.fetchCards().sink(receiveCompletion: { (completion) in
                 if case .failure(let error) = completion {
                     print("fetch error -- \(error)")
@@ -56,7 +57,6 @@ class ViewController: UIViewController,UITableViewDelegate {
                 
                 self?.update(with: cards)
             })
-        }
     }
     
     private func getOfflineArray() {
@@ -64,7 +64,7 @@ class ViewController: UIViewController,UITableViewDelegate {
         var dataModels: [DataModel] = []
         let offlineArray = defaults.array(forKey: "OfflineArray")
         offlineArray?.forEach { value in
-            dataModels.append(DataModel(planetName: value as! String))
+            dataModels.append(DataModel(planetName: value as! String, rotation_period: value as! String))
         }
         sectionModel.append(SectionModel(title: "", rows: dataModels))
         update(with: sectionModel)
@@ -107,6 +107,7 @@ extension ViewController {
                 cell = UITableViewCell(style: .subtitle, reuseIdentifier: reuseIdentifier)
             }
             cell.textLabel?.text = rowModel.planetName
+            cell.detailTextLabel?.text = rowModel.rotation_period
             return cell
         }
         

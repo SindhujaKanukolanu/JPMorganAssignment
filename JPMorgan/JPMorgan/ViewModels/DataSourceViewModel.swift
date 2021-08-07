@@ -22,8 +22,7 @@ class DataSourceViewModel {
     var allCancellable = Set<AnyCancellable>()
     var models = [SectionModel]()
     @Published var cardNames : AnyCancellable?
-
-
+    var planetsArray : [String] = []
     
     init() {
         getResponseDataForPlanets()
@@ -57,7 +56,7 @@ class DataSourceViewModel {
         
     func updateSectionModel(models:Model) {
         for each in models.results {
-            let cardModel = SectionModel(title:"", rows: [DataModel(planetName: each.name)])
+            let cardModel = SectionModel(title:"", rows: [DataModel(planetName: each.name,rotation_period: "Rotation Period: " + each.rotationPeriod)])
             cards.append(cardModel)
         }
         saveDataInDefaults()
@@ -76,11 +75,11 @@ class DataSourceViewModel {
     }
     
     func saveDataInDefaults() {
-        var planetsArray : [String] = []
         let userDefaults = UserDefaults.standard
         cards.forEach { model in
             model.rows.forEach { dataModel in
                 planetsArray.append(dataModel.planetName)
+                planetsArray.append("Rotation Period: " + dataModel.rotation_period)
             }
         }
         userDefaults.set(planetsArray, forKey: "OfflineArray")
