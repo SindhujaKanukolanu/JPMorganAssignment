@@ -75,32 +75,6 @@ class DataSourceViewModel {
         }.eraseToAnyPublisher()
     }
     
-    func convertStringToDictionary(data: Data) -> [String:AnyObject] {
-        do {
-            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
-            jsonObject = json!
-            return json!
-        } catch {
-            print("Something went wrong")
-        }
-        return jsonObject
-    }
-    
-    func convertDateFormat(inputDate: String) -> String {
-        let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "yyyy-MM-dd"
-        let oldDate = olDateFormatter.date(from: inputDate)
-        let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = "dd-MM-yyyy"
-        return convertDateFormatter.string(from: oldDate!)
-    }
-
-    func getLanguageFromCode(lang:String) -> String {
-        let locale = Locale(identifier: Locale.current.identifier).localizedString(forLanguageCode: lang)
-        let languageValue = "Language :" + (locale ?? "English")
-        return languageValue
-    }
-    
     func saveDataInDefaults() {
         var planetsArray : [String] = []
         let userDefaults = UserDefaults.standard
