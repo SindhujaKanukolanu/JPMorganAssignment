@@ -12,30 +12,39 @@ import Combine
 class JPMorganTests: XCTestCase {
 
     private var cardsPublisher: AnyCancellable?
+    var viewModel: DataSourceViewModel = DataSourceViewModel()
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    override class func setUp() {
+        super.setUp()
+         
     }
-
+    
+    override func setUpWithError() throws {
+        viewModel.getResponseDataForPlanets()
+    }
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     func testExample() throws {
-       let viewModel = DataSourceViewModel()
-        viewModel.getResponseData()
+       
         print(viewModel.cards.count)
         cardsPublisher = viewModel.fetchCards().sink(receiveCompletion: { (completion) in
             if case .failure(let error) = completion {
                 print("fetch error -- \(error)")
             }
         }, receiveValue: {  cards in
-            XCTAssertTrue(viewModel.cards.count > 0, "Cards are Present")
-            XCTAssertEqual(cards, viewModel.cards)
+            XCTAssertTrue(self.viewModel.cards.count > 0, "Cards are Present")
+            XCTAssertEqual(cards, self.viewModel.cards)
         })
     
     }
 
+    func testDataModel() {
+        let dataModel = DataModel(planetName: "Planet Name", rotation_period: "25")
+        let sectionModel = SectionModel(title: "Planets", rows: [dataModel])
+        XCTAssert(sectionModel.rows.count == 1)
+    }
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {

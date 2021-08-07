@@ -10,8 +10,9 @@ import UIKit
 
 struct DataModel:Hashable {
     
+    let uuid = UUID()
     static func == (lhs: DataModel, rhs: DataModel) -> Bool {
-        return lhs.hashValue == rhs.hashValue
+        return lhs.uuid == rhs.uuid
     }
     
     var planetName   : String

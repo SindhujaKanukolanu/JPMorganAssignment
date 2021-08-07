@@ -56,7 +56,7 @@ class DataSourceViewModel {
         
     func updateSectionModel(models:Model) {
         for each in models.results {
-            let cardModel = SectionModel(title:"", rows: [DataModel(planetName: each.name,rotation_period: "Rotation Period: " + each.rotationPeriod)])
+            let cardModel = SectionModel(title:"Planets & Rotation Period", rows: [DataModel(planetName: each.name,rotation_period: "Rotation Period: " + each.rotationPeriod)])
             cards.append(cardModel)
         }
         saveDataInDefaults()
