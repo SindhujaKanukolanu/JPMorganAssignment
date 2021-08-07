@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-enum NetworkError: Error {
+enum NetworkErrors: Error {
     case Success
     case Failure
 }
@@ -26,10 +26,10 @@ class DataSourceViewModel {
 
     
     init() {
-        getResponseData()
+        getResponseDataForPlanets()
     }
         
-    func getResponseData() {
+    func getResponseDataForPlanets() {
         if let urlString = URL(string: "https://swapi.dev/api/planets/") {
             let jsonPublisher =  URLSession.shared.dataTaskPublisher(for: urlString)
                 .tryMap ({ (data, response) -> Data in
@@ -54,7 +54,7 @@ class DataSourceViewModel {
             }.store(in: &allCancellable)
         }
     }
-    
+        
     func updateSectionModel(models:Model) {
         for each in models.results {
             let cardModel = SectionModel(title:"", rows: [DataModel(planetName: each.name)])
@@ -63,7 +63,7 @@ class DataSourceViewModel {
         saveDataInDefaults()
     }
     
-    func fetchCards() -> AnyPublisher<[SectionModel], NetworkError> {
+    func fetchCards() -> AnyPublisher<[SectionModel], NetworkErrors> {
         return Future { promise in
             DispatchQueue.global().asyncAfter(deadline: .now() + 1) { [weak self] in
                 guard let updatedCards = self?.cards else {
